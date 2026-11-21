@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>땀땀이의 꿈</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<canvas id="c"></canvas>
+
+<div id="hud">
+  <div id="me" class="chip"><div class="name jua" id="myName"></div><div class="sub jua" id="stageTxt"></div><div class="goal" id="goalTxt"></div><div class="carry" id="carryTxt"></div></div>
+  <div id="potStatus" class="chip"><div class="t jua" id="potTxt"></div><div id="potDrops"></div></div>
+  <button id="muteBtn" class="chip" aria-label="소리 끄기">🔊</button>
+  <div id="hint" class="chip"></div>
+  <div id="toast" class="jua"></div>
+  <div id="fullPanel">
+    <div id="perf"><button data-p="dance"><kbd>1</kbd>춤추기</button><button data-p="sing"><kbd>2</kbd>노래 부르기</button><button data-p="juggle"><kbd>3</kbd>물방울 저글링</button></div>
+    <button id="nextBtn" class="big">다음 스테이지로</button>
+  </div>
+  <div id="joy"><div id="joyKnob"></div></div>
+  <button id="dropBtn">내려<br>놓기</button>
+  <button id="actBtn" disabled>…</button>
+</div>
+
+<div id="bubble" class="jua"></div>
+<div id="caption" class="chip"><p id="capTxt"></p><button id="capBtn" class="big"></button></div>
+<div id="dialog" class="chip"><div class="who jua" id="dlgWho"></div><p id="dlgTxt"></p><div id="dlgCh"></div></div>
+<div id="mission"><div class="card"><h2 id="misTitle"></h2><div id="misBody"></div><button id="misBtn" class="big">알겠어요</button></div></div>
+
+<div id="title">
+  <div class="head"><h1>땀땀이의 꿈</h1><div class="lead">물 줄 때를 알려주는 화분, 땀땀이와 떠나는 작은 모험</div></div>
+  <div class="card">
+    <div class="q jua">누구와 함께할까요?</div>
+    <div id="charBtns"></div>
+    <div id="charLine"></div>
+    <button id="startBtn" class="big">이 친구로 시작하기</button>
+  </div>
+</div>
+
+<div id="about"><div class="wrap">
+  <div class="hero">
+    <div>
+      <div class="eyebrow jua">MooljoolDay 물줄때</div>
+      <h1>목마르면,<br>물방울이 쏙.</h1>
+      <p>꿈속에서 만난 화분 <b>땀땀이</b>는 실제로 만들고 있는 스마트 화분이에요. 흙이 마르면 머리 위로 물방울을 쏙 올려서 물 줄 때를 알려주고, 물은 내가 직접 줘요.</p>
+    </div>
+    <img id="imgHero" alt="물방울을 올린 땀땀이 화분" style="background:#fff">
+  </div>
+
+  <h2>왜 만들었나요</h2>
+  <div class="stats">
+    <div class="stat"><b>36.1%</b>전체 가구 중 1인 가구 (2024년 기준)</div>
+    <div class="stat"><b>55%</b>반려식물을 키우는 이유로 ‘정서적 교감·안정’을 꼽은 비율 (2022년 소비자 조사)</div>
+  </div>
+  <p style="margin-top:14px">식물을 키워 본 경험이 적으면 흙이 얼마나 말랐는지, 언제 물을 줘야 하는지 알기 어려워요. 그렇다고 물을 알아서 주는 자동급수 제품을 쓰면 직접 돌보는 즐거움이 줄어들죠. 그래서 물 줄 때는 화분이 알려주고, 돌봄은 내가 직접 하는 화분을 만들었어요.</p>
+  <p class="src">출처: 국가데이터처 「2025 통계로 보는 1인가구」, 농촌진흥청 소비자 조사(2022, 874명)</p>
+
+  <h2>땀땀이의 세 가지 약속</h2>
+  <div class="cards">
+    <div class="cardx"><i>1</i><b>한눈에 보이는 알림</b>흙이 마르면 물방울이 올라와요. 앱을 열지 않아도 화분만 보면 알 수 있어요.</div>
+    <div class="cardx"><i>2</i><b>물은 내가 직접</b>신호를 보고 내 손으로 물을 주니까 돌보는 즐거움이 그대로 남아요.</div>
+    <div class="cardx"><i>3</i><b>표정이 있는 화분</b>두 눈과 물방울로 “목말라요”를 전하는 캐릭터 디자인이에요.</div>
+  </div>
+
+  <h2>어떻게 알려주나요</h2>
+  <div class="two">
+    <figure><img id="imgWet" alt="수분이 충분할 때의 단면"><figcaption>수분 정상: 물방울이 숨어 있어요</figcaption></figure>
+    <figure><img id="imgDry" alt="흙이 말랐을 때의 단면"><figcaption>건조 감지: 물방울이 쏙 올라와요</figcaption></figure>
+  </div>
+  <ol style="margin-top:16px">
+    <li>토양수분센서가 6시간마다 흙 속 수분을 재요.</li>
+    <li>세 번 연속으로 건조하다고 확인되면 모터가 돌아요.</li>
+    <li>랙·피니언 기어가 물방울을 위로 밀어 올리고 덮개가 열려요.</li>
+    <li>물을 주고 수분이 두 번 연속 회복되면 물방울이 다시 내려가요.</li>
+  </ol>
+
+  <h2>속은 이렇게 생겼어요</h2>
+  <p>화분 안쪽 벽에는 흙의 수분을 재는 검은색 센서가 꽂혀 있고, 그 옆 구멍으로 물방울이 올라와요. 흙이 담기는 곳과 전자부품이 들어가는 곳은 벽으로 나뉘어 있어요.</p>
+  <div class="two">
+    <figure><img id="imgSensor" alt="땀땀이 화분 내부 단면"><figcaption>단면으로 본 내부: 센서, 기어, 모터, 물받이</figcaption></figure>
+    <figure><img id="imgInside" alt="서랍식 물받이를 연 땀땀이 화분"><figcaption>아래쪽 서랍식 물받이를 빼낸 모습</figcaption></figure>
+  </div>
+  <div style="margin-top:16px">
+    <table>
+      <tr><th>토양수분센서</th><td>정전용량식, 흙 속 수분 상태 측정</td></tr>
+      <tr><th>제어보드</th><td>ESP32-C3, 센서값 처리와 모터 제어</td></tr>
+      <tr><th>서보모터</th><td>모터 하나로 물방울과 덮개를 함께 구동</td></tr>
+      <tr><th>랙·피니언</th><td>회전운동을 직선운동으로 변환</td></tr>
+      <tr><th>물방울 표시기</th><td>흙의 건조 상태를 움직임으로 표현</td></tr>
+      <tr><th>서랍식 물받이</th><td>빠진 물을 모아 분리·세척</td></tr>
+      <tr><th>크기·전원</th><td>Ø160 × H155 mm, USB-C 5V</td></tr>
+    </table>
+  </div>
+
+  <h2>앱에서도 만나요</h2>
+  <div class="cards">
+    <div class="cardx"><b>씨앗 봉투 AI 인식</b>봉투를 찍으면 식물 정보와 물 주기 기준을 알려줘요.</div>
+    <div class="cardx"><b>땀땀이와 대화</b>“목말라;;”, “고마워;;;” 같은 말로 지금 상태를 전해요.</div>
+    <div class="cardx"><b>AI 성장일지</b>사진으로 식물이 자라는 모습을 기록해요.</div>
+  </div>
+
+  <h2>만든 사람들</h2>
+  <div class="two">
+    <img id="imgProto" alt="3D 프린팅으로 만든 시제품">
+    <p>경기과학기술대학교 디자인공학과 <b>4CUS</b>팀이 기획부터 모델링, 구동 구현, 앱 UX까지 함께 만들었어요.<br><br>최혜지 · 김채현 · 마상서 · 유재인</p>
+  </div>
+
+  <button id="againBtn" class="big again">게임 다시 하기</button>
+</div></div>
+
+<div id="lids"><i></i><i></i></div>
+<div id="fade"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>
